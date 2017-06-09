@@ -179,7 +179,7 @@ where the proximal operator is defined as
 \]
 
 %\vspace{-1.5em}
-\paragraph{Our Results} We summarize our results as follows. 
+\paragraph{Our Results.} We summarize our results as follows. 
 
 %\vspace{-1em}
 \paragraph{Linear Models.} When $l(\cdot,\cdot)$ is 
@@ -274,7 +274,7 @@ where $\sigma$ is the upper bound of the mean variance
 %Then $\E \left[ f \left( \frac{1}{T} \sum_{t = 0}^T \x_t \right) \right] - \min_{\x \in \mathcal{X}} f(\x) \leq \epsilon$.
 \end{theorem} 
 %\vspace{-0.7em}
-There are three key factors to ensure for SGD:
+There are three key requirements for SGD to converge:
 \begin{enumerate}[leftmargin=*, noitemsep]
 %\vspace{-0.75em}
 \item Computing stochastic gradient $\g_t$ is cheap;
@@ -298,7 +298,7 @@ each register can hold more numbers).
 This motivates us to use low-precision sample points to train the model. The following will introduce the proposed low-precision SGD framework by meeting all three factors for SGD.
 
 %\vspace{-0.5em}
-\subsection{Stochastic Quantization for Saving Bandwidth} 
+\subsection{Bandwidth-Efficient Stochastic Quantization} 
 %\vspace{-0.5em}
 
 We propose to use stochastic quantization to generate a low-precision version of an arbitrary vector $\v$ in the following 
@@ -342,14 +342,13 @@ We now present a simple method to fix the biased gradient estimator. We generate
 \end{align}
 This gives us an unbiased estimator of the gradient. 
 
-\paragraph*{Overhead of Storing Two Samples}
+\paragraph*{Overhead of Storing Samples.}
 The reader may have noticed that one implication of double sampling is the overhead of sending
 two samples instead of one. We note that this will not introduce $2\times$
-overhead in terms of data communication. Instead, just one additional bit
-is needed for the second sample because of correlation, as the two samples 
-differ by at most one bit. For example, to quantize the number 0.7 to either 0 or 1. Our strategy is to first store the smallest number of the interval (here 0), and then for each sample, send out 1 bit to represent whether this sample is at the lower marker (0) or the upper marker (1). Under this procedure, we need one extra bit for each sample. 
+overhead in terms of data communication. Instead, we start from the observation that the two samples can  
+differ by at most one bit. For example, to quantize the number 0.7 to either 0 or 1. Our strategy is to first store the smallest number of the interval (here 0), and then for each sample, send out 1 bit to represent whether this sample is at the lower marker (0) or the upper marker (1). Under this procedure, once we store the base quantization level, we will need one extra bit for each additional sample. 
 More generally, since samples
-are used symmetrically, we only need to send a number representing ‚Äúcount‚Äù for the lower marker. 
+are used symmetrically, we only need to send a number representing the numberÄú of times  the lower quantization level has been chosen among all the sampling trials. 
 Thus, sending $k$ samples only requires $\log_2 k$ more bits.
 %\vspace{-0.5em}
 \subsection{Variance Reduction}
@@ -362,7 +361,7 @@ From Theorem~\ref{thm:sgd-conv}, the mean variance ${1\over T}\sum_{t}\E\|\g_t -
 \\
 &+ \E \|\g_t - \g_t^{(full)})\|^2.
 \end{align*}
-The first term is from the full stochastic gradient, which can be reduced by using strategies such as mini-batch, weight sampling, and so on. Reducing the first term is issue orthogonal to this paper. 
+The first term is from the full stochastic gradient, which can be reduced by using strategies such as mini-batch, weight sampling, and so on. Thus, reducing the first term is an orthogonal issue for this paper. 
 Rather, we are interested in the second term, which is the additional cost of using low-precision samples. All strategies for reducing the variance of the first term can seamlessly combine with the approach of this paper. 
 The additional cost can be bounded by the following lemma.
 \begin{lemma} 
@@ -376,7 +375,7 @@ where $\mathcal{TV}(\a_t) := \E\|Q(\a_t) - \a_t\|^2$ and $\odot$ denotes the ele
 Thus, minimizing $\mathcal{TV}(\a_t)$ is key to reducing variance. 
 
 %\vspace{-0.5em}
-\paragraph{Uniform quantization} It makes intuitive sense that, the more levels of quantization, the lower the variance. The following  makes this quantitative dependence precise. 
+\paragraph{Uniform quantization.} It makes intuitive sense that, the more levels of quantization, the lower the variance. The following  makes this quantitative dependence precise. 
 
 \begin{lemma}
 \label{lem:quant-facts} [\cite{Alistarh:2016:ArXiv}]
@@ -391,7 +390,7 @@ Together with other results, it suggests the stochastic gradient variance of usi
 \[
 \E\|\g_t - \nabla f(\x_t)\|^2 \leq \sigma^2_{(full)} + \Theta \left( {n /s^2} \right),
 \]
-where $\sigma^2_{(full)} \geq \E \|\g_t^{(full)} - \nabla f(\x)\|^2$ is the upper bound of using the full stochastic gradient, assuming that $\x$ and all $\a_k$'s are bounded. Because the quantization level $s$ is exponential to the number of bits, to ensure that these two terms are comparable (using a low-precision sample does not degrade the convergence rate), the number of bits only needs to be greater than $\Theta (\log n /\sigma_{(full)})$. Even for linear models with millions
+where $\sigma^2_{(full)} \geq \E \|\g_t^{(full)} - \nabla f(\x)\|^2$ is the upper bound of using the full stochastic gradient, assuming that $\x$ and all $\a_k$'s are bounded. Because the number of quantization levels $s$ is exponential to the number of bits we use to quantize, to ensure that these two terms are comparable (using a low-precision sample does not degrade the convergence rate), the number of bits only needs to be greater than $\Theta (\log n /\sigma_{(full)})$. Even for linear models with millions
 of features, 32 bits is likely to be  ``overkill.''
 
 %\vspace{-0.5em}
@@ -411,7 +410,7 @@ In the previous section, we have assumed uniformly distributed quantization poin
 We now investigate the choice of quantization points and present an optimal strategy to minimize the quantization variance term $\mathcal{TV}(\a_t)$.
 
 %\vspace{-1em}
-\paragraph*{Problem Setting}
+\paragraph*{Problem Setting.}
 Assume a set of real numbers $\Omega = \{x_1, \ldots, x_N\}$ with cardinality $N$. WLOG, assume that all numbers are in $[0, 1]$ and that $x_1 \leq \ldots \leq x_N$. 
 
 The goal is to partition $\setI = \{I_j\}_{j = 1}^s$ of $[0, 1]$ into $s$ disjoint intervals, so that if we randomly quantize every $x \in I_j$ to an endpoint of $I_j$, the variance is minimal over all possible partitions of $[0, 1]$ into $s$ intervals.
@@ -437,8 +436,8 @@ We let the optimum solution be $\setI^* = \argmin_{|\setI| = k} \err (\setX, \se
 We first present a dynamic programming algorithm that solves the above problem in an exact way. In the next subsection, we present a more practical approximation algorithm that only needs to scan all data points \emph{once}.
 
 %\vspace{-0.5em}
-One challenge is due to non-convexity and non-smoothness. 
-We start from the observation that there exists an optimal solution that places endpoints at input points. 
+This optimization problem is non-convex and non-smooth. 
+We start from the observation that there exists an optimal solution that places endpoints \emph{at input points}. 
 
 \begin{lemma}
 \label{lem:discrete}
@@ -462,7 +461,7 @@ Therefore, to solve the problem in an exact way, we just need to select a subset
 \[
 T(k, m) = \min_{j\in \{k-1, k, \cdots, m-1\}} T(k-1,j) + V(j,m),
 \]
-where $V(j,m)$ denotes the total variance of points falling into $[d_j, d_m]$. The complexity of calculating the matrix $V(\cdot, \cdot)$ is $O(N^2 + N)$ and the complexity of calculating matrix $T(\cdot, \cdot)$ is $O(kN^2)$. The memory cost is $O(kN + N^2)$. 
+where $V(j,m)$ denotes the total variance of points falling in the interval $[d_j, d_m]$. The complexity of calculating the matrix $V(\cdot, \cdot)$ is $O(N^2 + N)$ and the complexity of calculating the matrix $T(\cdot, \cdot)$ is $O(kN^2)$. The memory cost is $O(kN + N^2)$. 
 
 \begin{figure}[t]
 \centering    
@@ -478,13 +477,13 @@ dynamic programming given a data distribution. }
 \subsection{Heuristics}
 %\vspace{-0.5em}
 
-The exact algorithm has a complexity that is quadratic to the number of data points. To make our algorithm practical,
+The exact algorithm has a complexity that is quadratic in the number of data points, which may be impractical. To make our algorithm practical,
 we develop an approximation algorithm that only needs to scan all data points once and has linear complexity to $N$.
 
 %\vspace{-0.5em}
 \paragraph*{Discretization}
 
-We can discretize the range $[0,1]$ into $M$ intervals, i.e., $[0,d_1), [d_1, d_2), \cdots, [d_{M-1}, 1]$ with $0< d_1<d_2<\cdots < d_{M-1}<1$. We then restrict our algorithms to only choose $k$ quantization points within these $M$ points, instead of all $N$ points in the exact algorithm. The following result bounded the quality of this approximation.
+We can discretize the range $[0,1]$ into $M$ intervals, i.e., $[0,d_1), [d_1, d_2), \cdots, [d_{M-1}, 1]$ with $0< d_1<d_2<\cdots < d_{M-1}<1$. We then restrict our algorithms to only choose $k$ quantization points within these $M$ points, instead of all $N$ points in the exact algorithm. The following result bounds the quality of this approximation.
 
 \begin{theorem} \label{thm:optQ}
 Let the maximal number of data points in each ``small interval'' (defined by $\{d_m\}_{m=1}^{M-1}$) and the maximal length of small intervals be bounded by $bN/M$ and $a/M$, respectively. Let ${\mathcal{I}^*} := \{l^*_j\}_{k=1}^{k-1}$ and $\hat{\mathcal{I}}^* :=\{\hat{l}^*_k\}_{k=1}^{k-1}$ be the optimal quantization to \eqref{eq:opt_Q} and the solution with discretization. Let $cM/k$ be the upper bound of the number of small intervals crossed by any ``large interval'' (defined by ${\mathcal{I}}^*$). Then we have the discretization error bounded by
@@ -498,20 +497,20 @@ Let the maximal number of data points in each ``small interval'' (defined by $\{
 Theorem~\ref{thm:optQ} suggests that the mean variance using the discrete variance-optimal quantization will converge to the optimal with the rate $O(1/Mk)$.
 
 %\vspace{-0.5em}
-\paragraph*{Dynamic Programming with Candidate Points}
+\paragraph*{Dynamic Programming with Candidate Points.}
 Notice that we can apply the same dynamic programming approach given $M$ candidate points. 
 In this case, the total computational complexity becomes $O((k+1)M^2 + N)$, with memory cost 
 $O(kM + M^2)$. Also, to find the optimal quantization,  we only need to scan all $N$ numbers once.
 Figure~\ref{fig:optimalquantization} illustrates an example output for our algorithm.
 
 %\vspace{-0.5em}
-\paragraph*{$2$-Approximation in Almost-Linear Time} 
-In the supplementary material, we present an algorithm which, given $\Omega$ and $k$, provides a split using at most $4 k$ intervals, which guarantees a $2$-approximation of the optimal variance for $k$ intervals, using $O( N \log N )$ time. This 
-is a new variant of that by (Acharya et al., 2015) for the histogram recovery problem. 
+\paragraph*{$2$-Approximation in Almost-Linear Time.} 
+In the full version of this paper, we present an algorithm which, given $\Omega$ and $k$, provides a split using at most $4 k$ intervals, which guarantees a $2$-approximation of the optimal variance for $k$ intervals, using $O( N \log N )$ time. This 
+is a new variant of the algorithm by (Acharya et al., 2015)\todo{proper citation} for the histogram recovery problem. 
 We can use the $4k$ intervals given by this algorithm as candidates for the DP solution, to get a general $2$-approximation using $k$ intervals in time $O( N \log N + k^3)$. 
 
 %\vspace{-1.0em}
-\subsection{Extension to Deep Learning}
+\subsection{Applications to Deep Learning}
 %\vspace{-0.5em}
 
 In this section, we show that it is possible 
@@ -519,7 +518,7 @@ to apply optimal quantization to
 training deep neural networks.
 
 %\vspace{-0.5em}
-\paragraph*{State-of-the-art} We focus on
+\paragraph*{State-of-the-art.} We focus on
 training deep neural networks with a quantized
 model. Let $\mathcal{W}$ be the model and 
 $l(\mathcal{W})$ be the loss function. State-of-the-art quantized networks,
@@ -609,7 +608,7 @@ Dataset           & \# Projections & Volumn Size & Proj. Size \\
 \section{Experiments} \label{sec:exp}
 
 %\vspace{-0.5em}
-We provide empirical validation of
+We now provide an empirical validation of
 our framework.
 
 %\vspace{-1em}
@@ -634,7 +633,7 @@ implementation, as this can only improve the accuracy of our approach.)
 \paragraph*{Summary of Experiments}
 Due to space limitations, we only report on {\bf Synthetic 100} for regression, and on 
 {\bf gisette} for classification. 
-The additional material contains (1) several other datasets, 
+The additional material\todo{Add more results, and pointer to full version of the paper} contains (1) several other datasets, 
 and discusses (2) different
 factors such as impact of the number of features, 
 (3) FPGA implementation and design
@@ -651,10 +650,10 @@ decisions, and (4) refetching heuristics.
 \end{figure}
 
 %\vspace{-1em}
-\subsection{Linear Models}
+\subsection{Convergence on Linear Models}
 %\vspace{-0.5em}
 
-For linear models, we validate that (1) 
+We validate that (1) 
 with double sampling, SGD with low
 precision converges---in
 comparable empirical 
@@ -891,8 +890,8 @@ With this setting, as little as two bits per model dimension are sufficient for 
 %\vspace{-0.2em}
 \paragraph{Non-Linear Models.}
 We mainly discussed linear models (e.g. linear regression) in this paper. The natural question is that can we extend our ZipML framework to non-linear models (e.g. logistic regression or SVM) which are arguably more commonly used?
-Actually, we find that our framework can be generalized to non-linear settings, and that in practice 8-bit is sufficient to achieve 
-good accuracy on a variety of tasks, such as SVM and logistic regression. However, we notice that the straw man approach, which applies naive stochastic rounding over the input data to just 8-bit precision, converges to similar results, without the added complexity. It is interesting to consider the rationale behind these results. Our framework is based on the idea of \emph{unbiased approximation} of the original SGD process. For linear models, this is easy to achieve. For non-linear models, this is harder, and we focus on guaranteeing arbitrarily low bias. 
+In the full version on this paper, we examine this problem, and find that our framework can be generalized to non-linear settings, and that in practice 8-bit is sufficient to achieve 
+good accuracy on a variety of tasks, such as SVM and logistic regression. However, we notice that a strawman approach, which applies naive stochastic rounding over the input data to just 8-bit precision, converges to similar results, without the added complexity. It is interesting to consider the rationale behind these results. Our framework is based on the idea of \emph{unbiased approximation} of the original SGD process. For linear models, this is easy to achieve. For non-linear models, this is harder, and we focus on guaranteeing arbitrarily low bias. 
 However, for a variety of interesting functions such as hinge loss, guaranteeing low bias requires complex approximations. In turn, these increase the variance. The complexity of the approximation and the resulting variance increase force us to increase the \emph{density} of the quantization, in order to achieve good approximation guarantees. We will leave detailed research for ZipML on non-linear models as future work.
 
 \paragraph{Hardware Selection.}
