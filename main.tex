@@ -359,7 +359,7 @@ From Theorem~\ref{thm:sgd-conv}, the mean variance ${1\over T}\sum_{t}\E\|\g_t -
 \begin{align*}
 \E\|\g_t - \nabla f(\x_t)\|^2 & \leq \E \|\g_t^{(full)}- \nabla f(\x_t)\|^2 
 \\
-&+ \E \|\g_t - \g_t^{(full)})\|^2.
+&+ \E \|\g_t - \g_t^{(full)}\|^2.
 \end{align*}
 The first term is from the full stochastic gradient, which can be reduced by using strategies such as mini-batch, weight sampling, and so on. Thus, reducing the first term is an orthogonal issue for this paper. 
 Rather, we are interested in the second term, which is the additional cost of using low-precision samples. All strategies for reducing the variance of the first term can seamlessly combine with the approach of this paper. 
