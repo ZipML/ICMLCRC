@@ -1,0 +1,54 @@
+This is BibTeX, Version 0.99d (TeX Live 2016)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: main.aux
+The style file: icml2017.bst
+Database file #1: low-precision.bib.bib
+I was expecting a `,' or a `}'---line 269 of file low-precision.bib.bib
+ : 
+ : @inproceedings{DeSa:NIPS:2015,
+(Error may have been on previous line)
+I'm skipping whatever remains of this entry
+Warning--to sort, need author or key in Caffe:CIFAR10
+Warning--empty year in Caffe:CIFAR10
+You've used 22 entries,
+            2773 wiz_defined-function locations,
+            695 strings with 8513 characters,
+and the built_in function-call counts, 9893 in all, are:
+= -- 773
+> -- 743
+< -- 3
++ -- 250
+- -- 228
+* -- 801
+:= -- 1553
+add.period$ -- 65
+call.type$ -- 22
+change.case$ -- 142
+chr.to.int$ -- 22
+cite$ -- 47
+duplicate$ -- 476
+empty$ -- 794
+format.name$ -- 251
+if$ -- 2044
+int.to.chr$ -- 1
+int.to.str$ -- 1
+missing$ -- 21
+newline$ -- 117
+num.names$ -- 84
+pop$ -- 338
+preamble$ -- 1
+purify$ -- 120
+quote$ -- 0
+skip$ -- 343
+stack$ -- 0
+substring$ -- 45
+swap$ -- 33
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 242
+warning$ -- 2
+while$ -- 63
+width$ -- 0
+write$ -- 268
+(There was 1 error message)
