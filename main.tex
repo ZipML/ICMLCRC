@@ -59,18 +59,36 @@
 
 \date{}
 
-\usepackage{icml2017}
+\usepackage[accepted]{icml2017}
 
-\icmltitlerunning{Training Models with End-to-End Low Precision}
+\icmltitlerunning{Training Linear Models with End-to-End Low Precision}
 
 \begin{document}
 
 \twocolumn[
-\icmltitle{Training Models with End-to-End Low Precision:\\
-The Cans, the Cannots, and a Little Bit of Deep Learning}
+\icmltitle{Training Linear Models with End-to-End Low Precision,\\
+and a Little Bit of Deep Learning}
+
+
+\begin{icmlauthorlist}
+\icmlauthor{Hantian Zhang}{eth}
+\icmlauthor{Jerry Li}{mit}
+\icmlauthor{Kaan Kara}{eth}
+\icmlauthor{Dan Alistarh}{eth,ist}
+\icmlauthor{Ji Liu}{roc}
+\icmlauthor{Ce Zhang}{eth} 
+\end{icmlauthorlist}
+
+\icmlaffiliation{eth}{ETH Zurich, Switzerland}
+\icmlaffiliation{mit}{Massachusetts Institute of Technology, USA}
+\icmlaffiliation{roc}{University of Rochester, USA}
+\icmlaffiliation{ist}{IST Austria, Austria}
+
+\icmlcorrespondingauthor{Hantian Zhang}{hantian.zhang@inf.ethz.ch}
+\icmlcorrespondingauthor{Ce Zhang}{ce.zhang@inf.ethz.ch}
     \vskip 0.3in
 ]
-
+\printAffiliationsAndNotice{}
 \begin{abstract}
 
 %\vspace{-0.75em}
@@ -84,7 +102,7 @@ precision with \emph{provable} guarantees? Can this
 lead to consistent order-of-magnitude speedups?}
 
 %\vspace{-0.1em}
-For linear models, the answer is yes. We develop a simple 
+We mainly focus on linear models, and the answer is yes for linear models. We develop a simple 
 framework based on one simple but novel strategy called double sampling. 
 Our framework is able 
 to execute training at low precision with no bias, 
@@ -481,7 +499,7 @@ The exact algorithm has a complexity that is quadratic in the number of data poi
 we develop an approximation algorithm that only needs to scan all data points once and has linear complexity to $N$.
 
 %\vspace{-0.5em}
-\paragraph*{Discretization}
+\paragraph*{Discretization.}
 
 We can discretize the range $[0,1]$ into $M$ intervals, i.e., $[0,d_1), [d_1, d_2), \cdots, [d_{M-1}, 1]$ with $0< d_1<d_2<\cdots < d_{M-1}<1$. We then restrict our algorithms to only choose $k$ quantization points within these $M$ points, instead of all $N$ points in the exact algorithm. The following result bounds the quality of this approximation.
 
@@ -505,8 +523,8 @@ Figure~\ref{fig:optimalquantization} illustrates an example output for our algor
 
 %\vspace{-0.5em}
 \paragraph*{$2$-Approximation in Almost-Linear Time.} 
-In the full version of this paper, we present an algorithm which, given $\Omega$ and $k$, provides a split using at most $4 k$ intervals, which guarantees a $2$-approximation of the optimal variance for $k$ intervals, using $O( N \log N )$ time. This 
-is a new variant of the algorithm by (Acharya et al., 2015)\todo{proper citation} for the histogram recovery problem. 
+In the full version of this paper~\cite{zhang2016zipml}, we present an algorithm which, given $\Omega$ and $k$, provides a split using at most $4 k$ intervals, which guarantees a $2$-approximation of the optimal variance for $k$ intervals, using $O( N \log N )$ time. This 
+is a new variant of the algorithm by \cite{acharya2015fast} for the histogram recovery problem. 
 We can use the $4k$ intervals given by this algorithm as candidates for the DP solution, to get a general $2$-approximation using $k$ intervals in time $O( N \log N + k^3)$. 
 
 %\vspace{-1.0em}
@@ -539,7 +557,7 @@ XNOR-Net, as well as other approaches such as QNN, resort
 to uniform quantization.
 
 %\vspace{-1.0em}
-\paragraph*{Optimal Model Quantization for Deep Learning}
+\paragraph*{Optimal Model Quantization for Deep Learning.}
 
 We can apply our optimal quantization strategy 
 and use it as the quantization function $Q$
@@ -612,7 +630,7 @@ We now provide an empirical validation of
 our framework.
 
 %\vspace{-1em}
-\paragraph{Experimental Setup} 
+\paragraph{Experimental Setup.} 
 Table~\ref{table:dataset} shows the 
 datasets we use. 
 Unless otherwise noted, we always
@@ -630,14 +648,14 @@ Thus we do not tune step sizes for the low-precision
 implementation, as this can only improve the accuracy of our approach.) 
 
 %\vspace{-1em}
-\paragraph*{Summary of Experiments}
+\paragraph*{Summary of Experiments.}
 Due to space limitations, we only report on {\bf Synthetic 100} for regression, and on 
 {\bf gisette} for classification. 
-The additional material\todo{Add more results, and pointer to full version of the paper} contains (1) several other datasets, 
+The full version of this paper~\cite{zhang2016zipml} contains (1) several other datasets, 
 and discusses (2) different
 factors such as impact of the number of features, 
-(3) FPGA implementation and design
-decisions, and (4) refetching heuristics.
+and (3) refetching heuristics. The FPGA implementation and design
+decisions can be found in ~\citet{kara2017fpga}.
 
 
 \begin{figure}[t]
@@ -665,7 +683,7 @@ because of the decrease in bandwidth
 consumption.
 
 %\vspace{-1.5em}
-\paragraph{Convergence}
+\paragraph{Convergence.}
 
 Figure~\ref{fig:convergence} illustrates
 the result of training linear models:
@@ -696,11 +714,11 @@ memory bandwidth compared to using
 32-bit. 
 
 %\vspace{-1em}
-\paragraph{Speedup}
+\paragraph{Speedup.}
 We implemented our low-precision 
 framework on a state-of-the-art 
-FPGA platform. We leave the detailed 
-implementation to the full version.
+FPGA platform. The detailed 
+implementation is described in ~\cite{kara2017fpga}.
 This implementation assumes the input
 data is already quantized and
 stored in memory (data can be
@@ -763,7 +781,7 @@ quantization only needs 3-bit.
 We save almost $1.7\times$ number of 
 bits by just allocating quantization points carefully.
 
-\paragraph{Comparision with uniform quantization}
+\paragraph{Comparision with uniform quantization.}
 
 \begin{figure}[t]
 \centering
@@ -784,10 +802,10 @@ but not gradient or model.
 We see that, if we use same number of bits, optimal quantization
 always converges faster than uniform quantization and the loss curve
 is more stable, because the variance induced by quantization is smaller. 
-As a result, with our data-optimal quantization strategy
-We can either (1) get higher convergence speed
+As a result, with our data-optimal quantization strategy,
+we can either (1) get up to $4\times$ faster convergence speed
 with the same number of bits;
-or (2) use less bits while getting the same convergence speed. 
+or (2) save up to $1.7\times$ bits while getting the same convergence speed. 
 
 
 We also see from Figure~\ref{fig:lr-qd} (a) to (c) that if the dataset has more
@@ -892,12 +910,14 @@ With this setting, as little as two bits per model dimension are sufficient for 
 We mainly discussed linear models (e.g. linear regression) in this paper. The natural question is that can we extend our ZipML framework to non-linear models (e.g. logistic regression or SVM) which are arguably more commonly used?
 In the full version on this paper, we examine this problem, and find that our framework can be generalized to non-linear settings, and that in practice 8-bit is sufficient to achieve 
 good accuracy on a variety of tasks, such as SVM and logistic regression. However, we notice that a strawman approach, which applies naive stochastic rounding over the input data to just 8-bit precision, converges to similar results, without the added complexity. It is interesting to consider the rationale behind these results. Our framework is based on the idea of \emph{unbiased approximation} of the original SGD process. For linear models, this is easy to achieve. For non-linear models, this is harder, and we focus on guaranteeing arbitrarily low bias. 
-However, for a variety of interesting functions such as hinge loss, guaranteeing low bias requires complex approximations. In turn, these increase the variance. The complexity of the approximation and the resulting variance increase force us to increase the \emph{density} of the quantization, in order to achieve good approximation guarantees. We will leave detailed research for ZipML on non-linear models as future work.
+However, for a variety of interesting functions such as hinge loss, guaranteeing low bias requires complex approximations. In turn, these increase the variance. The complexity of the approximation and the resulting variance increase force us to increase the \emph{density} of the quantization, in order to achieve good approximation guarantees.
 
 \paragraph{Hardware Selection.}
 
 We choose to realize our implementation using FPGA because of its flexibility in dealing with low-precision arithmetic, while CPU or GPU can only do at least 8-bit computation efficiently. However, we do observe speed up in other environments -- for example, the “double sampling” techniques are currently being applied to sensor networks with embedded GPUs and CPUs to achieve similar speedup.
 We are currently conducting an “architecture exploration” study which aims at understanding the system trade-off between FPGA, CPU, and GPU. This requires us to push the implementation on all three architectures to the extreme. We expect this study will soon provide a full systematic answer to the question that on which hardware can we get the most from the ZipML framework.
+\section*{Acknowledgements}
+CZ gratefully acknowledges the support from the Swiss National Science Foundation NRP 75 407540\_167266, NVIDIA Corporation for its GPU donation, and Microsoft Azure for Research award program.
 
 \cleardoublepage
 
