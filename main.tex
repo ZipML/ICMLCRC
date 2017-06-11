@@ -374,11 +374,14 @@ Thus, sending $k$ samples only requires $\log_2 k$ more bits.
 
 From Theorem~\ref{thm:sgd-conv}, the mean variance ${1\over T}\sum_{t}\E\|\g_t - \nabla f(\x)\|^2$ will dominate the convergence efficiency. It is not hard to see that the variance of the double sampling based stochastic gradient in \eqref{eq:double} can be decomposed into
 %\vspace{-0.5em}
-\begin{align*}
+\begin{align}
+\begin{split}
 \E\|\g_t - \nabla f(\x_t)\|^2 & \leq \E \|\g_t^{(full)}- \nabla f(\x_t)\|^2 
 \\
 &+ \E \|\g_t - \g_t^{(full)}\|^2.
-\end{align*}
+\label{neq:decompose}
+\end{split}
+\end{align}
 The first term is from the full stochastic gradient, which can be reduced by using strategies such as mini-batch, weight sampling, and so on. Thus, reducing the first term is an orthogonal issue for this paper. 
 Rather, we are interested in the second term, which is the additional cost of using low-precision samples. All strategies for reducing the variance of the first term can seamlessly combine with the approach of this paper. 
 The additional cost can be bounded by the following lemma.
@@ -753,8 +756,21 @@ explains the speedup.
 \label{fig:speedup}
 \end{figure}
 
-\paragraph{Impact of using mini-batch.}
-We validate that 
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.8\columnwidth]{minibatchs} 
+%\vspace{-1em}
+\caption{Impact of Using Mini-Batch. BS=Batch Size}
+%\vspace{-2em}
+\label{fig:minibatch}
+\end{figure}
+
+\paragraph{Impact of Using Mini-Batch.}
+We validate that if we use large mini-batch size, the SGD will be more ``sensitive'' to the precision. In theory, as inequation~\ref{neq:decompose} suggests, the variance are composed by two terms:
+the first one is from the full stochastic gradient and the second one is from quantization. Our assumption is that,
+if we reduce the first term by using mini-batch, then the total variance is more ``sensitive'' to the second term. 
+Thus, to achieve a comparable convergence rate, We need to make sure that the second term introduced by quantization isn't too big. However, figure~\ref{fig:minibatch} shows that, if we use larger mini-batch size (256), we need more epochs
+than using smaller mini-batch size (16) to converge, but for the quantized version, actually the one with larger mini-batch size converges faster. 
 
 
 \begin{figure}[t]
