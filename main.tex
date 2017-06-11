@@ -524,7 +524,7 @@ Figure~\ref{fig:optimalquantization} illustrates an example output for our algor
 %\vspace{-0.5em}
 \paragraph*{$2$-Approximation in Almost-Linear Time.} 
 In the full version of this paper~\cite{zhang2016zipml}, we present an algorithm which, given $\Omega$ and $k$, provides a split using at most $4 k$ intervals, which guarantees a $2$-approximation of the optimal variance for $k$ intervals, using $O( N \log N )$ time. This 
-is a new variant of the algorithm by \cite{acharya2015fast} for the histogram recovery problem. 
+is a new variant of the algorithm by~\cite{acharya2015fast} for the histogram recovery problem. 
 We can use the $4k$ intervals given by this algorithm as candidates for the DP solution, to get a general $2$-approximation using $k$ intervals in time $O( N \log N + k^3)$. 
 
 %\vspace{-1.0em}
@@ -753,6 +753,10 @@ explains the speedup.
 \label{fig:speedup}
 \end{figure}
 
+\paragraph{Impact of using mini-batch.}
+We validate that 
+
+
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.8\columnwidth]{final-experiments/optimal} 
@@ -774,7 +778,11 @@ Figure~\ref{fig:optimal}(a) illustrates
 the result of using 3-bit and 5-bit
 for uniform quantization and optimal 
 quantization on the {\bf YearPrediction}
-dataset. We see that,
+dataset. 
+Here, we only consider quantization on data, but not on gradient or model, because to compute the
+data-optimal quantization, we need to have access to all data and assume the data doesn't change too much, which is not the case for gradient or model.
+The quantization points are calculated for each feature for both uniform quantization and optimal quantization.
+We see that,
 while uniform quantization needs 5-bit
 to converge smoothly, optimal
 quantization only needs 3-bit. 
