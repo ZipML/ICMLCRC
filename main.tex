@@ -61,12 +61,12 @@
 
 \usepackage[accepted]{icml2017}
 
-\icmltitlerunning{Training Linear Models with End-to-End Low Precision}
+\icmltitlerunning{ZipML: Training Linear Models with End-to-End Low Precision}
 
 \begin{document}
 
 \twocolumn[
-\icmltitle{Training Linear Models with End-to-End Low Precision,\\
+\icmltitle{ZipML: Training Linear Models with End-to-End Low Precision,\\
 and a Little Bit of Deep Learning}
 
 
@@ -100,19 +100,15 @@ perspective, and ask:
 {\em is it possible to \emph{train} models at end-to-end low 
 precision with \emph{provable} guarantees? Can this 
 lead to consistent order-of-magnitude speedups?}
-
-%\vspace{-0.1em}
 We mainly focus on linear models, and the answer is yes for linear models. We develop a simple 
-framework based on one simple but novel strategy called double sampling. 
-Our framework is able 
+framework called ZipML based on one simple but novel strategy called double sampling. 
+Our ZipML framework is able 
 to execute training at low precision with no bias, 
 guaranteeing convergence, whereas naive quantization 
 would introduce significant bias. We validate our framework   
 across a range of applications, and show that it enables an 
 FPGA prototype that is up to $6.5\times$ faster 
 than an implementation using full 32-bit precision.
-
-%\vspace{-0.1em}
 We further develop a variance-optimal 
 stochastic quantization
 strategy and show that 
@@ -156,10 +152,10 @@ In this context, the motivating question behind our work is:  {\em When training
 can we lower the precision of data representation,
 communication, and computation, while maintaining provable guarantees?}
  
-In this paper, we develop a general 
+In this paper, we develop ZipML, a general 
 framework to answer this question, and
-present both positive and negative results
- obtained in the context of this framework. 
+present results
+ obtained in the context of this ZipML framework. 
  Figure~\ref{fig:highlight} encapsulates our results: 
 (a) for linear models, we are able to lower the precision of both computation and communication, including input samples, gradients, and model, by up to $16$ times, while still providing rigorous theoretical guarantees; 
 (b) our FPGA implementation of this framework achieves up to $6.5\times$ speedup compared with
@@ -630,7 +626,7 @@ Dataset           & \# Projections & Volumn Size & Proj. Size \\
 
 %\vspace{-0.5em}
 We now provide an empirical validation of
-our framework.
+our ZipML framework.
 
 %\vspace{-1em}
 \paragraph{Experimental Setup.} 
@@ -927,12 +923,12 @@ enables new algorithms.
 
 %\vspace{-0.5em}
 Our motivating question was whether end-to-end low-precision data representation can enable efficient computation with convergence guarantees. 
-We show that a relatively simple stochastic quantization framework can achieve this for linear models. 
+We show that ZipML, a relatively simple stochastic quantization framework can achieve this for linear models. 
 With this setting, as little as two bits per model dimension are sufficient for good accuracy, and can enable a fast FPGA implementation.  
 
 %\vspace{-0.2em}
 \paragraph{Non-Linear Models.}
-We mainly discussed linear models (e.g. linear regression) in this paper. The natural question is that can we extend our ZipML framework to non-linear models (e.g. logistic regression or SVM) which are arguably more commonly used?
+We mainly discussed linear models (e.g. linear regression) in this paper. The natural question is that can we extend our ZipML framework to non-linear models (e.g. logistic regression or SVM) which are arguably more commonly used.
 In the full version on this paper, we examine this problem, and find that our framework can be generalized to non-linear settings, and that in practice 8-bit is sufficient to achieve 
 good accuracy on a variety of tasks, such as SVM and logistic regression. However, we notice that a strawman approach, which applies naive stochastic rounding over the input data to just 8-bit precision, converges to similar results, without the added complexity. It is interesting to consider the rationale behind these results. Our framework is based on the idea of \emph{unbiased approximation} of the original SGD process. For linear models, this is easy to achieve. For non-linear models, this is harder, and we focus on guaranteeing arbitrarily low bias. 
 However, for a variety of interesting functions such as hinge loss, guaranteeing low bias requires complex approximations. In turn, these increase the variance. The complexity of the approximation and the resulting variance increase force us to increase the \emph{density} of the quantization, in order to achieve good approximation guarantees.
