@@ -658,7 +658,7 @@ The full version of this paper~\cite{zhang2016zipml} contains (1) several other 
 and discusses (2) different
 factors such as impact of the number of features, 
 and (3) refetching heuristics. The FPGA implementation and design
-decisions can be found in ~\citet{kara2017fpga}.
+decisions can be found in~\cite{kara2017fpga}.
 
 
 \begin{figure}[t]
@@ -765,10 +765,10 @@ explains the speedup.
 \label{fig:minibatch}
 \end{figure}
 
-\paragraph{Impact of Using Mini-Batch.}
+\paragraph{Impact of Mini-Batching.}
 
 
-We validate that if we use large mini-batch size, the SGD will be more ``sensitive'' to the precision. Equation~\ref{eqn:varbound} suggests that, as we increase batch size, the variance term corresponding to input quantization may start to dominate the variance of the stochastic gradient. However, in practice and for reasonable parameter settings, we found this does not occur: convergence trends for small batch size, e.g. 1, are the same as for larger sizes, e.g. 256.
+We now validate the``sensitivity'' of the algorithm to the precision under batching. Equation~\ref{eqn:varbound} suggests that, as we increase batch size, the variance term corresponding to input quantization may start to dominate the variance of the stochastic gradient. However, in practice and for reasonable parameter settings, we found this does not occur: convergence trends for small batch size, e.g. 1, are the same as for larger sizes, e.g. 256.
 Figure~\ref{fig:minibatch} shows that, if we use larger mini-batch size (256), we need more epochs
 than using smaller mini-batch size (16) to converge, but for the quantized version, actually the one with larger mini-batch size converges faster. 
 
